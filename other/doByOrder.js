@@ -35,8 +35,8 @@ const doByOrder = async (tasks, callback) => {
     });
   }
 
-  for (let i = 0; i < tasks.length; i++) {
-    await doTask(tasks[i], callback);
+  for (const task of tasks) {
+    await doTask(task, callback);
   }
 };
 
