@@ -25,19 +25,65 @@ const c = (callback) => {
 
 const tasks = [a, b, c];
 
-const doByOrder = async (tasks, callback) => {
-  function doTask(task, callback) {
-    return new Promise((resolve) => {
-      task((arg) => {
-        resolve();
-        callback(arg);
-      });
-    });
-  }
+// const doByOrder = async (tasks, callback) => {
+//   function doTask(task, callback) {
+//     return new Promise((resolve) => {
+//       task((arg) => {
+//         resolve();
+//         callback(arg);
+//       });
+//     });
+//   }
 
-  for (const task of tasks) {
-    await doTask(task, callback);
-  }
+//   for (const task of tasks) {
+//     await doTask(task, callback);
+//   }
+// };
+
+// const doByOrder = (tasks, callback) => {
+//   Promise.resolve(tasks[0])
+//     .then((task) => {
+//       return new Promise((resolve) => {
+//         task((arg) => {
+//           callback(arg);
+//           resolve(tasks[1]);
+//         });
+//       });
+//     })
+//     .then((task) => {
+//       return new Promise((resolve) => {
+//         task((arg) => {
+//           resolve(tasks[2]);
+//           callback(arg);
+//         });
+//       });
+//     })
+//     .then((task) => {
+//       return new Promise((resolve) => {
+//         task((arg) => {
+//           resolve();
+//           callback(arg);
+//         });
+//       });
+//     });
+// };
+
+const doByOrder = (tasks, callback) => {
+  let i = 0;
+  const next = () => {
+    if (i > tasks.length - 1) return;
+    tasks[i++]((val) => {
+      callback(val);
+      next();
+    });
+    // tasks[i]((val) => {
+    //   callback(val);
+    //   i++;
+    //   next();
+    // });
+  };
+
+  next();
 };
 
 doByOrder(tasks, console.log.bind(console));
